@@ -1,15 +1,29 @@
 import 'dart:html';
+import 'dart:indexed_db';
 
 InputElement newTodo;
 UListElement todoList;
 UListElement doneList;
 
 void main() {
+  if(!isCompatible()) return; 
+
   todoList = querySelector('#to-do-list');
   doneList = querySelector('#done-list');
 
   newTodo = querySelector('#new-to-do');
   newTodo.onChange.listen(addNewTodo); 
+}
+
+bool isCompatible(){
+  if(IdbFactory.supported) return true;
+  
+  var body=querySelector('body');
+  body.children.clear();
+  var error = new SpanElement();
+  error.text = "Looks like your browser doesn't support IndexedDB";
+  body.children.add(error);
+  return false;
 }
 
 void addNewTodo(Event e) {
