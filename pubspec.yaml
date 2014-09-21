@@ -1,0 +1,6 @@
+name: Todo
+description: A sample web application
+dependencies:
+  browser: any
+  http: any
+  polymer: "0.10.0"
