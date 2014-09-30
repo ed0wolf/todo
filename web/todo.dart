@@ -1,9 +1,15 @@
+library Todo;
+
 import 'dart:html';
 import 'dart:indexed_db';
+import 'dart:async';
+
+part 'todoRepository.dart';
 
 InputElement newTodo;
 UListElement todoList;
 UListElement doneList;
+TodoRepository repo;
 
 void main() {
   if(!isCompatible()) return; 
@@ -13,6 +19,8 @@ void main() {
 
   newTodo = querySelector('#new-to-do');
   newTodo.onChange.listen(addNewTodo); 
+  repo = new TodoRepository();
+  repo.open();
 }
 
 bool isCompatible(){
@@ -30,9 +38,12 @@ void addNewTodo(Event e) {
   var item = new LIElement();
   var checkbox = new CheckboxInputElement();
   checkbox.onClick.listen(handleClickedCheckbox);
+  
+  var todo = new Todo(newTodo.value, false);
+  repo.add(todo);
 
   item.children.add(checkbox);
-  item.appendText(newTodo.value);
+  item.appendText(todo.text);
   newTodo.value = '';
   todoList.children.add(item);
 } 
